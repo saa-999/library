@@ -1,0 +1,26 @@
+﻿@model IEnumerable<library.Models.Book>
+@{
+    ViewData["Title"] = "Books";
+}
+<section class="grid fade-in">
+    @foreach (var b in Model)
+    {
+        <a class="card book white" asp-controller="Books" asp-action="Details" asp-route-id="@b.Id">
+            <div class="cover" style="background-image:url('@b.ImagePath');"></div>
+            <div class="info">
+                <div class="title">@b.Title</div>
+                <div class="meta">
+                    <span class="author">@b.Author</span>
+                    <span class="badge @(b.Signed ? "ok" : "")">@(b.Signed ? "Signed" : "Not signed")</span>
+                </div>
+                <div class="stars" data-val="@b.Rating">
+                    <div class="fill" style="width:@(Math.Clamp(b.Rating / 5.0, 0, 1) * 100)%"></div>
+                </div>
+            </div>
+        </a>
+    }
+    @if (!Model.Any())
+    {
+        <div class="empty">لا توجد نتائج. جرّب كلمات أخرى.</div>
+    }
+</section>

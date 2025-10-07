@@ -1,0 +1,29 @@
+﻿@model library.Models.Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+<section class="details fade-in">
+    <div class="detail-wrap">
+        <div class="detail-cover">
+            <img src="@Model.ImagePath" alt="@Model.Title cover" />
+        </div>
+        <div class="detail-body">
+            <h1 class="big">@Model.Title</h1>
+            <div class="muted">by @Model.Author</div>
+
+            <div class="row">
+                <div class="stars large" data-val="@Model.Rating">
+                    <div class="fill" style="width:@(Math.Clamp(Model.Rating / 5.0, 0, 1) * 100)%"></div>
+                </div>
+                <span class="badge @(Model.Signed ? "ok" : "")">@(Model.Signed ? "Signed copy" : "Not signed")</span>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="desc">@Model.Description</p>
+            }
+
+            <a asp-controller="Books" asp-action="Index" class="btn secondary">Back</a>
+        </div>
+    </div>
+</section>

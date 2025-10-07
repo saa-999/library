@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Library Login";
+}
+<section class="login-wrap fade-in">
+    <h1 class="login-title">Library Login</h1>
+    <form asp-action="Login" asp-controller="Auth" method="post" class="login-form column">
+        @Html.AntiForgeryToken()
+
+        <label>Username</label>
+        <input name="username" placeholder="e.g. saud" required />
+
+        <label>Password</label>
+        <input name="password" type="password" placeholder="••••••" required />
+
+        <button type="submit" class="btn wide">Sign in</button>
+        <p class="error">@ViewBag.Error</p>
+    </form>
+</section>

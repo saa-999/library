@@ -1,0 +1,71 @@
+﻿@{
+    // Figure out where we are to tweak layout
+    var controller = (ViewContext.RouteData.Values["controller"] as string ?? "").ToLowerInvariant();
+    var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLowerInvariant();
+    bool isLogin = (controller == "auth" && action == "login");
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Library</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="@(isLogin ? "theme-login" : "theme-white")">
+    <!-- Slime canvas background -->
+    <canvas id="slime" aria-hidden="true"></canvas>
+
+    @if (!isLogin)
+    {
+        // ✅ داخل جسم if ما نستخدم @{ }، فقط C# عادي قبل أي HTML
+        var qVal = ViewBag.Q as string ?? "";
+        bool onlySigned = ViewBag.OnlySigned is bool os && os;
+        double? minRating = ViewBag.MinRating is double mr ? mr : (double?)null;
+
+        <header class="topbar">
+            <div class="brand">📚 Library</div>
+
+            <form method="get" asp-controller="Books" asp-action="Index" class="topsearch">
+                <input name="q" value="@qVal" placeholder="ابحث عن كتاب أو مؤلف…" />
+
+                <label class="chk">
+                    <input type="checkbox" name="onlySigned" value="true" @(onlySigned ? "checked=\"checked\"" : "") />
+                    موقّعة فقط
+                </label>
+
+                <select name="minRating" class="rating-select">
+                    <option value="">الحد الأدنى للتقييم</option>
+                    @for (var r = 5.0; r >= 0; r -= 0.5)
+                    {
+                        var isSel = (minRating.HasValue && Math.Abs(minRating.Value - r) < 0.001);
+                        if (isSel)
+                        {
+                            <option value="@r" selected="selected">@r.ToString("0.0")+</option>
+                        }
+                        else
+                        {
+                            <option value="@r">@r.ToString("0.0")+</option>
+                        }
+                    }
+                </select>
+
+                <button class="btn">بحث</button>
+            </form>
+
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="logout">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn secondary">تسجيل الخروج</button>
+            </form>
+        </header>
+    }
+
+    <main class="page">
+        @RenderBody()
+    </main>
+
+    <script src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

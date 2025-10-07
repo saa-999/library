@@ -1,0 +1,32 @@
+﻿@model library.Models.Book
+@{
+    ViewData["Title"] = "Add Book";
+}
+<section class="card fade-in">
+    <h1 class="title">Add a new book</h1>
+
+    <form asp-action="Create" asp-controller="Books" method="post" enctype="multipart/form-data" class="form">
+        @Html.AntiForgeryToken()
+
+        <label>Title</label>
+        <input asp-for="Title" placeholder="Book title" required />
+
+        <label>Author</label>
+        <input asp-for="Author" placeholder="Author name" required />
+
+        <label class="inline">
+            <input asp-for="Signed" type="checkbox" /> Signed copy
+        </label>
+
+        <label>Description</label>
+        <textarea asp-for="Description" rows="5" placeholder="Short summary..."></textarea>
+
+        <label>Cover image (jpg/png/webp/gif, max 2MB)</label>
+        <input name="image" type="file" accept=".jpg,.jpeg,.png,.webp,.gif" />
+
+        <button type="submit" class="btn">Save</button>
+        <a asp-controller="Books" asp-action="Index" class="btn secondary">Cancel</a>
+
+        <p class="error">@Html.ValidationSummary(false)</p>
+    </form>
+</section>
